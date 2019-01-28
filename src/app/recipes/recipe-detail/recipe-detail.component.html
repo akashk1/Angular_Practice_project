@@ -11,15 +11,16 @@
 </div>
 <div class="row">
   <div class="col-xs-12">
-  <div class="btn-group">
+  <div class="btn-group" appDropdown>
     <button type="button" 
     class="btn btn-primary dropdown-toggle">
-Manage <span class="caret"></span>
+Manage Recipe <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-<li ><a href="#"> To Shopping List</a></li>
-<li ><a href="#">Edit Recipe</a></li>
-<li ><a href="#">Delete Recipe</a></li>
+<li ><a (click)="onAddToShoppingList()" style="cursor:pointer"> To Shopping List</a></li>
+<!--<li ><a style="cursor:pointer"  [routerLink]="['/recipes',id,'edit']">Edit Recipe</a></li>-->
+<li ><a style="cursor:pointer" (click)="onEdit()">Edit Recipe</a></li>
+<li ><a style="cursor:pointer" (click)="onDelete()" >Delete Recipe</a></li>
     </ul>
   </div>
   </div>
@@ -30,6 +31,13 @@ Manage <span class="caret"></span>
   </div>
 </div>
 <div class="row">
-  <div class="col-xs-12">Ingredients
+  <div class="col-xs-12">
+    <ul class="list-group">
+      <li class="list-group-item"
+      *ngFor="let ingredient of recipe.ingredients">
+      {{ingredient.name}}-{{ingredient.amount}}
+
+      </li>
+    </ul>
   </div>
 </div>

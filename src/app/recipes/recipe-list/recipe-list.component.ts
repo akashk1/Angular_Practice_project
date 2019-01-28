@@ -1,24 +1,36 @@
-import { Component, OnInit,EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { Recipe } from '../recipe.model';
+import { RecipeService } from '../recipe.service';
+import { Router, ActivatedRoute } from '../../../../node_modules/@angular/router';
+import { Subscription } from '../../../../node_modules/rxjs';
 
 @Component({
   selector: 'app-recipe-list',
   templateUrl: './recipe-list.component.html',
   styleUrls: ['./recipe-list.component.css']
 })
-export class RecipeListComponent implements OnInit {
+export class RecipeListComponent implements OnInit,OnDestroy {
 
-  @Output() recipeWasSelected=new EventEmitter<Recipe>();
-recipes:Recipe[]=[
-  new Recipe('First Recipe','This is my First Recipe','https://img.sndimg.com/food/image/upload/w_707,h_398,c_fill,fl_progressive,q_80/v1/img/recipes/40/49/7/iUlxb54sSWaD9Zp44kfP_FGgWFV4mSVq8aISp1eQG_baked%20wings%20(1%20of%204).jpg'),
-  new Recipe('Second Recipe','This is my First Recipe','https://img.sndimg.com/food/image/upload/w_707,h_398,c_fill,fl_progressive,q_80/v1/img/recipes/40/49/7/iUlxb54sSWaD9Zp44kfP_FGgWFV4mSVq8aISp1eQG_baked%20wings%20(1%20of%204).jpg')
-];
-  constructor() { }
+recipes:Recipe[];
+subscription:Subscription;
+  constructor(private recipeService:RecipeService,private router:Router,private route:ActivatedRoute) { }
 
   ngOnInit() {
+  
+  this.subscription= this.recipeService.recipeChanged.subscribe(
+     (recipe:Recipe[])=>
+     {
+       this.recipes=recipe;
+     }
+   );
+   this.recipes= this.recipeService.getRecipe();
   }
-onRecipeSelected(recipe:Recipe)
+  onEdit()
+  {
+this.router.navigate(['new'],{relativeTo:this.route});
+  }
+ngOnDestroy()
 {
-this.recipeWasSelected.emit(recipe);
+this.subscription.unsubscribe();
 }
 }
